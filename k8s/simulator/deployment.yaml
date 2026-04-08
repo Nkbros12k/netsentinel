@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator
+  namespace: netsentinel
+  labels:
+    app: simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+        - name: simulator
+          image: netsentinel-simulator:latest
+          imagePullPolicy: IfNotPresent
+          command: ["python", "simulator.py", "--api-url", "http://api-service:8000", "--rate", "2", "--attack-ratio", "0.3"]
+          envFrom:
+            - configMapRef:
+                name: netsentinel-config
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
