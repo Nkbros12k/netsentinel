@@ -39,12 +39,14 @@ export function ThreatGlobe({ events }: { events: ThreatEvent[] }) {
   const [arcs, setArcs] = useState<ArcData[]>([]);
 
   useEffect(() => {
-    if (globeRef.current) {
-      globeRef.current.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 0);
-      globeRef.current.controls().autoRotate = true;
-      globeRef.current.controls().autoRotateSpeed = 0.5;
-      globeRef.current.controls().enableZoom = true;
-    }
+    if (!globeRef.current) return;
+
+    globeRef.current.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 0);
+    const controls = globeRef.current.controls();
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.5;
+    controls.enableZoom = true;
+
   }, []);
 
   useEffect(() => {
@@ -68,8 +70,9 @@ export function ThreatGlobe({ events }: { events: ThreatEvent[] }) {
   );
 
   return (
-    <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 overflow-hidden">
+    <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 overflow-hidden relative">
       <h3 className="text-sm font-medium text-slate-400 mb-2">Global Threat Map</h3>
+
       <div className="flex justify-center" style={{ height: 350 }}>
         <Globe
           ref={globeRef}
